@@ -55,12 +55,10 @@ class Product(TimeStampedModel):
         return f"{self.name} ({self.sku})"
 
     def current_stock(self) -> int:
-    agg = self.movements.aggregate(
-        total_in=Sum("quantity", filter=Q(movement_type="IN")),
-        total_out=Sum("quantity", filter=Q(movement_type="OUT")),
-    )
-    total_in = agg.get("total_in") or 0
-    total_out = agg.get("total_out") or 0
-    return total_in - total_out
-
-
+        agg = self.movements.aggregate(
+            total_in=Sum("quantity", filter=Q(movement_type="IN")),
+            total_out=Sum("quantity", filter=Q(movement_type="OUT")),
+        )
+        total_in = agg.get("total_in") or 0
+        total_out = agg.get("total_out") or 0
+        return total_in - total_out
