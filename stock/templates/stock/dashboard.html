@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WarehousePro Dashboard</title>
+</head>
+<body>
+    <h1>WarehousePro Dashboard</h1>
+
+    <h2>Low Stock Products</h2>
+    <ul>
+        {% for product, stock in low_stock_products %}
+            <li>{{ product.name }} (SKU: {{ product.sku }}) — Current stock: {{ stock }}</li>
+        {% empty %}
+            <li>No low stock products</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Recent Stock Movements</h2>
+    <ul>
+        {% for m in recent_movements %}
+            <li>{{ m.created_at }} — {{ m.product.name }} — {{ m.movement_type }} — {{ m.quantity }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
