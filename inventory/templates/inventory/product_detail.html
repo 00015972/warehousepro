@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>{{ product.name }}</h1>
+        {% if user.is_authenticated %}
+            <div>
+                <a href="{% url 'inventory:product_update' product.pk %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'inventory:product_delete' product.pk %}" class="btn btn-danger">Delete</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <table>
+        <tr>
+            <th>SKU</th>
+            <td>{{ product.sku }}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>{{ product.category.name }}</td>
+        </tr>
+        <tr>
+            <th>Unit Price</th>
+            <td>${{ product.unit_price }}</td>
+        </tr>
+        <tr>
+            <th>Reorder Level</th>
+            <td>{{ product.reorder_level }}</td>
+        </tr>
+        <tr>
+            <th>Current Stock</th>
+            <td>{{ stock }}</td>
+        </tr>
+        <tr>
+            <th>Suppliers</th>
+            <td>
+                {% for s in product.suppliers.all %}
+                    {{ s.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    None assigned
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td>{{ product.created_at|date:"M d, Y H:i" }}</td>
+        </tr>
+        <tr>
+            <th>Updated</th>
+            <td>{{ product.updated_at|date:"M d, Y H:i" }}</td>
+        </tr>
+    </table>
+
+    {% if product.image %}
+        <div class="mt-2">
+            <h2>Product Image</h2>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; border-radius: 8px;">
+        </div>
+    {% endif %}
+
+    <div class="mt-2">
+        <a href="{% url 'inventory:product_list' %}" class="btn btn-secondary">Back to Products</a>
+    </div>
+</div>
+{% endblock %}

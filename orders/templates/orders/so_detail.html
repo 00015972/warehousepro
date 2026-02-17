@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}SO #{{ order.pk }} - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Sales Order #{{ order.pk }}</h1>
+        <div>
+            <a href="{% url 'orders:so_update' order.pk %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'orders:so_delete' order.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Customer</th>
+            <td>{{ order.customer.name }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ order.get_status_display }}</td>
+        </tr>
+        <tr>
+            <th>Created By</th>
+            <td>{{ order.created_by.username }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+        </tr>
+        {% if order.notes %}
+        <tr>
+            <th>Notes</th>
+            <td>{{ order.notes }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<div class="card">
+    <h2>Order Items</h2>
+    {% if order.items.all %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>SKU</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.sku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.unit_price }}</td>
+                        <td>${{ item.quantity|floatformat:0 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No items in this order.</p>
+    {% endif %}
+
+    <div class="mt-2">
+        <a href="{% url 'orders:so_list' %}" class="btn btn-secondary">Back to Sales Orders</a>
+    </div>
+</div>
+{% endblock %}

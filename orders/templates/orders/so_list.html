@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Orders - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Sales Orders</h1>
+        <a href="{% url 'orders:so_create' %}" class="btn btn-primary">+ New Sales Order</a>
+    </div>
+
+    {% if orders %}
+        <table>
+            <thead>
+                <tr>
+                    <th>SO #</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'orders:so_detail' order.pk %}">#{{ order.pk }}</a></td>
+                        <td>{{ order.customer.name }}</td>
+                        <td><span class="badge badge-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+                        <td>{{ order.created_by.username }}</td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'orders:so_detail' order.pk %}" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">View</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="mt-1">No sales orders found.</p>
+    {% endif %}
+</div>
+{% endblock %}

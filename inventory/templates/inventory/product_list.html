@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Products - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Products</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'inventory:product_create' %}" class="btn btn-primary">+ Add Product</a>
+        {% endif %}
+    </div>
+
+    {% if product_data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>SKU</th>
+                    <th>Category</th>
+                    <th>Unit Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in product_data %}
+                    <tr>
+                        <td><a href="{% url 'inventory:product_detail' item.product.pk %}">{{ item.product.name }}</a></td>
+                        <td>{{ item.product.sku }}</td>
+                        <td>{{ item.product.category.name }}</td>
+                        <td>${{ item.product.unit_price }}</td>
+                        <td>{{ item.stock }}</td>
+                        <td>
+                            <a href="{% url 'inventory:product_detail' item.product.pk %}" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">View</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="mt-1">No products found. Add your first product to get started.</p>
+    {% endif %}
+</div>
+{% endblock %}

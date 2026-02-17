@@ -187,7 +187,10 @@
         <a href="{% url 'dashboard' %}" class="navbar-brand">WarehousePro</a>
         <ul class="navbar-nav">
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'inventory:product_list' %}">Products</a></li>
             {% if user.is_authenticated %}
+                <li><a href="{% url 'orders:po_list' %}">Purchase Orders</a></li>
+                <li><a href="{% url 'orders:so_list' %}">Sales Orders</a></li>
                 <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
                 <li>
                     <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
