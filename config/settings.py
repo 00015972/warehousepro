@@ -64,7 +64,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,4 +148,9 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
 CSRF_COOKIE_DOMAIN = None
+
+# Authentication settings
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'accounts:login'
 SESSION_COOKIE_DOMAIN = None

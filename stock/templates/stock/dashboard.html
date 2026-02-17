@@ -1,25 +1,68 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>WarehousePro Dashboard</title>
-</head>
-<body>
-    <h1>WarehousePro Dashboard</h1>
+{% extends "base.html" %}
 
+{% block title %}Dashboard - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Dashboard</h1>
+    {% if user.is_authenticated %}
+        <p class="mb-2">Welcome back, <strong>{{ user.username }}</strong>!</p>
+    {% else %}
+        <p class="mb-2">Welcome to WarehousePro! <a href="{% url 'accounts:login' %}">Login</a> to manage inventory.</p>
+    {% endif %}
+</div>
+
+<div class="card">
     <h2>Low Stock Products</h2>
-    <ul>
-        {% for product, stock in low_stock_products %}
-            <li>{{ product.name }} (SKU: {{ product.sku }}) — Current stock: {{ stock }}</li>
-        {% empty %}
-            <li>No low stock products</li>
-        {% endfor %}
-    </ul>
+    {% if low_stock_products %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>SKU</th>
+                    <th>Current Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product, stock in low_stock_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ stock }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No low stock products.</p>
+    {% endif %}
+</div>
 
+<div class="card">
     <h2>Recent Stock Movements</h2>
-    <ul>
-        {% for m in recent_movements %}
-            <li>{{ m.created_at }} — {{ m.product.name }} — {{ m.movement_type }} — {{ m.quantity }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    {% if recent_movements %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in recent_movements %}
+                    <tr>
+                        <td>{{ m.created_at|date:"M d, Y H:i" }}</td>
+                        <td>{{ m.product.name }}</td>
+                        <td>{{ m.movement_type }}</td>
+                        <td>{{ m.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No recent stock movements.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h1>User Profile</h1>
+    
+    <table>
+        <tr>
+            <th>Username</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ user.email|default:"Not provided" }}</td>
+        </tr>
+        <tr>
+            <th>First Name</th>
+            <td>{{ user.first_name|default:"Not provided" }}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <td>{{ user.last_name|default:"Not provided" }}</td>
+        </tr>
+        <tr>
+            <th>Date Joined</th>
+            <td>{{ user.date_joined|date:"F d, Y" }}</td>
+        </tr>
+        <tr>
+            <th>Last Login</th>
+            <td>{{ user.last_login|date:"F d, Y H:i"|default:"Never" }}</td>
+        </tr>
+    </table>
+    
+    <div class="mt-2">
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

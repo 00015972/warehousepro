@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Logged Out - WarehousePro{% endblock %}
+
+{% block content %}
+<div class="card text-center" style="max-width: 400px; margin: 0 auto;">
+    <h1>Logged Out</h1>
+    <p class="mb-2">You have been successfully logged out.</p>
+    <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login Again</a>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Go to Dashboard</a>
+</div>
+{% endblock %}
