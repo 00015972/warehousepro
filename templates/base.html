@@ -44,6 +44,20 @@
         .navbar-nav a:hover {
             background-color: #34495e;
         }
+        .nav-logout-btn {
+            background: none;
+            border: none;
+            color: #ecf0f1;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: background-color 0.2s;
+        }
+        .nav-logout-btn:hover {
+            background-color: #34495e;
+        }
         .container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -175,7 +189,12 @@
             <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
-                <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                <li>
+                    <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-logout-btn">Logout</button>
+                    </form>
+                </li>
             {% else %}
                 <li><a href="{% url 'accounts:login' %}">Login</a></li>
                 <li><a href="{% url 'accounts:register' %}">Register</a></li>
