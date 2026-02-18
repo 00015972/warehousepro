@@ -27,4 +27,3 @@ class StockMovement(models.Model):
 
     def __str__(self) -> str:
         return f"{self.movement_type} {self.quantity} x {self.product.sku}"
-

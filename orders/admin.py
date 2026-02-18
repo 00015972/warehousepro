@@ -24,4 +24,3 @@ class SalesOrderAdmin(admin.ModelAdmin):
     list_display = ("id", "customer", "status", "created_by", "created_at")
     list_filter = ("status",)
     inlines = [SalesOrderItemInline]
-

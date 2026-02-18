@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class RegistrationForm(UserCreationForm):
     """Custom registration form with email field."""
-    
+
     email = forms.EmailField(
         required=True,
         help_text="Required. Enter a valid email address."

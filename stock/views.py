@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.db.models import Sum, Q
 
 from inventory.models import Product
 from .models import StockMovement

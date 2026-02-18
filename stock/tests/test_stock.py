@@ -69,7 +69,19 @@ class StockCalculationTests(TestCase):
         self.assertTrue(self.product.current_stock() <= self.product.reorder_level)
 
     def test_multiple_movements_aggregate_correctly(self):
-        StockMovement.objects.create(product=self.product, movement_type="IN", reference_type="MANUAL", reference_id="", quantity=8, note="", created_by=self.user)
-        StockMovement.objects.create(product=self.product, movement_type="IN", reference_type="MANUAL", reference_id="", quantity=2, note="", created_by=self.user)
-        StockMovement.objects.create(product=self.product, movement_type="OUT", reference_type="MANUAL", reference_id="", quantity=4, note="", created_by=self.user)
+        StockMovement.objects.create(
+            product=self.product, movement_type="IN",
+            reference_type="MANUAL", reference_id="",
+            quantity=8, note="", created_by=self.user,
+        )
+        StockMovement.objects.create(
+            product=self.product, movement_type="IN",
+            reference_type="MANUAL", reference_id="",
+            quantity=2, note="", created_by=self.user,
+        )
+        StockMovement.objects.create(
+            product=self.product, movement_type="OUT",
+            reference_type="MANUAL", reference_id="",
+            quantity=4, note="", created_by=self.user,
+        )
         self.assertEqual(self.product.current_stock(), 6)
