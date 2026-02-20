@@ -10,7 +10,7 @@ def register(request):
     """Handle user registration."""
     if request.user.is_authenticated:
         return redirect("dashboard")
-    
+
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -22,7 +22,7 @@ def register(request):
             messages.error(request, "Please correct the errors below.")
     else:
         form = RegistrationForm()
-    
+
     return render(request, "accounts/register.html", {"form": form})
 
 

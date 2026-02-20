@@ -23,7 +23,10 @@ def po_list(request):
 @login_required
 def po_detail(request, pk):
     """View a single purchase order with its items."""
-    order = get_object_or_404(PurchaseOrder.objects.select_related("supplier", "created_by").prefetch_related("items__product"), pk=pk)
+    qs = PurchaseOrder.objects.select_related(
+        "supplier", "created_by"
+    ).prefetch_related("items__product")
+    order = get_object_or_404(qs, pk=pk)
     return render(request, "orders/po_detail.html", {"order": order})
 
 
@@ -53,7 +56,9 @@ def po_update(request, pk):
     order = get_object_or_404(PurchaseOrder, pk=pk)
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=order)
-        formset = PurchaseOrderItemFormSet(request.POST, instance=order)
+        formset = PurchaseOrderItemFormSet(
+            request.POST, instance=order
+        )
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
@@ -62,7 +67,11 @@ def po_update(request, pk):
     else:
         form = PurchaseOrderForm(instance=order)
         formset = PurchaseOrderItemFormSet(instance=order)
-    return render(request, "orders/po_form.html", {"form": form, "formset": formset, "title": "Edit Purchase Order", "order": order})
+    ctx = {
+        "form": form, "formset": formset,
+        "title": "Edit Purchase Order", "order": order,
+    }
+    return render(request, "orders/po_form.html", ctx)
 
 
 @login_required
@@ -88,7 +97,10 @@ def so_list(request):
 @login_required
 def so_detail(request, pk):
     """View a single sales order with its items."""
-    order = get_object_or_404(SalesOrder.objects.select_related("customer", "created_by").prefetch_related("items__product"), pk=pk)
+    qs = SalesOrder.objects.select_related(
+        "customer", "created_by"
+    ).prefetch_related("items__product")
+    order = get_object_or_404(qs, pk=pk)
     return render(request, "orders/so_detail.html", {"order": order})
 
 
@@ -118,7 +130,9 @@ def so_update(request, pk):
     order = get_object_or_404(SalesOrder, pk=pk)
     if request.method == "POST":
         form = SalesOrderForm(request.POST, instance=order)
-        formset = SalesOrderItemFormSet(request.POST, instance=order)
+        formset = SalesOrderItemFormSet(
+            request.POST, instance=order
+        )
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
@@ -127,7 +141,11 @@ def so_update(request, pk):
     else:
         form = SalesOrderForm(instance=order)
         formset = SalesOrderItemFormSet(instance=order)
-    return render(request, "orders/so_form.html", {"form": form, "formset": formset, "title": "Edit Sales Order", "order": order})
+    ctx = {
+        "form": form, "formset": formset,
+        "title": "Edit Sales Order", "order": order,
+    }
+    return render(request, "orders/so_form.html", ctx)
 
 
 @login_required

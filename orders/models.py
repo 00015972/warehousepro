@@ -62,4 +62,3 @@ class SalesOrderItem(models.Model):
 
     def __str__(self) -> str:
         return f"SO#{self.sales_order_id} - {self.product.sku} x{self.quantity}"
-
