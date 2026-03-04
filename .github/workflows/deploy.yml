@@ -7,33 +7,59 @@ name: CI/CD Pipeline
 #     branches: [main]
 
 on:
-  workflow_dispatch:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
+
+
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/warehousepro
 
+# jobs:
+#   # ── Step 1: Code Quality ─────────────────────────────────────
+#   lint:
+#     name: Code Quality Check
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.12"
+
+#       - name: Install flake8
+#         run: pip install flake8
+
+#       - name: Run flake8
+#         run: flake8 --max-line-length=120 --exclude=migrations,__pycache__,.venv .
+
 jobs:
-  # ── Step 1: Code Quality ─────────────────────────────────────
-  lint:
-    name: Code Quality Check
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          python-version: "3.12"
-
-      - name: Install flake8
-        run: pip install flake8
-
-      - name: Run flake8
-        run: flake8 --max-line-length=120 --exclude=migrations,__pycache__,.venv .
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/warehousepro
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
 
   # ── Step 2: Run Tests ────────────────────────────────────────
   test:
