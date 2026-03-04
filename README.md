@@ -18,6 +18,7 @@ Warehouse Inventory Management System built with Django, containerized with Dock
 - **Database:** PostgreSQL 16
 - **Containerization:** Docker, Docker Compose
 - **CI/CD:** GitHub Actions
+- **Deployment:** Google Cloud Platform (GCP)
 
 ## Database Schema
 
