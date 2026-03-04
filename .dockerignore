@@ -10,3 +10,5 @@ db.sqlite3
 media
 staticfiles
 *.log
+.github
+pytest.ini
