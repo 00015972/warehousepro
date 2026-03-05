@@ -9,6 +9,7 @@ from .forms import (
     SalesOrderForm,
     SalesOrderItemFormSet,
 )
+from .signals import create_po_stock_movements, create_so_stock_movements
 
 
 # ── Purchase Orders ──────────────────────────────────────────────
@@ -42,6 +43,9 @@ def po_create(request):
             order.save()
             formset.instance = order
             formset.save()
+            # Process stock movements AFTER items are saved
+            if order.status == PurchaseOrder.Status.RECEIVED:
+                create_po_stock_movements(order)
             messages.success(request, f"Purchase Order #{order.pk} created.")
             return redirect("orders:po_detail", pk=order.pk)
     else:
@@ -54,14 +58,18 @@ def po_create(request):
 def po_update(request, pk):
     """Update an existing purchase order."""
     order = get_object_or_404(PurchaseOrder, pk=pk)
+    prev_status = order.status
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=order)
         formset = PurchaseOrderItemFormSet(
             request.POST, instance=order
         )
         if form.is_valid() and formset.is_valid():
-            form.save()
+            order = form.save()
             formset.save()
+            # Process stock movements AFTER items are saved (if status changed to RECEIVED)
+            if prev_status != PurchaseOrder.Status.RECEIVED and order.status == PurchaseOrder.Status.RECEIVED:
+                create_po_stock_movements(order)
             messages.success(request, f"Purchase Order #{order.pk} updated.")
             return redirect("orders:po_detail", pk=order.pk)
     else:
@@ -116,6 +124,9 @@ def so_create(request):
             order.save()
             formset.instance = order
             formset.save()
+            # Process stock movements AFTER items are saved
+            if order.status == SalesOrder.Status.SHIPPED:
+                create_so_stock_movements(order)
             messages.success(request, f"Sales Order #{order.pk} created.")
             return redirect("orders:so_detail", pk=order.pk)
     else:
@@ -128,14 +139,18 @@ def so_create(request):
 def so_update(request, pk):
     """Update an existing sales order."""
     order = get_object_or_404(SalesOrder, pk=pk)
+    prev_status = order.status
     if request.method == "POST":
         form = SalesOrderForm(request.POST, instance=order)
         formset = SalesOrderItemFormSet(
             request.POST, instance=order
         )
         if form.is_valid() and formset.is_valid():
-            form.save()
+            order = form.save()
             formset.save()
+            # Process stock movements AFTER items are saved (if status changed to SHIPPED)
+            if prev_status != SalesOrder.Status.SHIPPED and order.status == SalesOrder.Status.SHIPPED:
+                create_so_stock_movements(order)
             messages.success(request, f"Sales Order #{order.pk} updated.")
             return redirect("orders:so_detail", pk=order.pk)
     else:
