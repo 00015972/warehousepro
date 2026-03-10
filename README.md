@@ -167,3 +167,5 @@ warehousepro/
 ```bash
 # Check if PostgreSQL container is running
 docker compose ps
+
+# Check logs for database container
